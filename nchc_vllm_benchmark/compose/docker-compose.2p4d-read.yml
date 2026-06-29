@@ -1,0 +1,80 @@
+services:
+  router:
+    image: ${ROUTER_IMAGE}
+    container_name: vllm-router-moriio
+    network_mode: host
+    command: >
+      vllm-router
+      --host 0.0.0.0
+      --port 30000
+      --vllm-pd-disaggregation
+      --kv-connector moriio
+      --vllm-discovery-address 0.0.0.0:36367
+
+  prefill:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-2p4d-prefill
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      VLLM_MORIIO_CONNECTOR_READ_MODE: ${VLLM_MORIIO_CONNECTOR_READ_MODE}
+      HF_HOME: ${HF_HOME}
+      VLLM_ROCM_USE_AITER: "1"
+      HIP_VISIBLE_DEVICES: "0,1"
+    command: >
+      ${PD_MODEL}
+      --tensor-parallel-size 2
+      --host 0.0.0.0
+      --port 20005
+      --dtype ${DTYPE}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+      --max-model-len ${MAX_MODEL_LEN}
+      --kv-transfer-config
+      '{"kv_connector":"MoRIIOConnector","kv_role":"kv_producer","kv_connector_extra_config":{"backend":"xgmi","read_mode":true,"proxy_ip":"127.0.0.1","proxy_ping_port":"36367","http_port":"20005","handshake_port":"6301","notify_port":"6105"}}'
+    depends_on:
+      - router
+
+  decode:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-2p4d-decode
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      VLLM_MORIIO_CONNECTOR_READ_MODE: ${VLLM_MORIIO_CONNECTOR_READ_MODE}
+      HF_HOME: ${HF_HOME}
+      VLLM_ROCM_USE_AITER: "1"
+      HIP_VISIBLE_DEVICES: "2,3,4,5"
+    command: >
+      ${PD_MODEL}
+      --tensor-parallel-size 4
+      --host 0.0.0.0
+      --port 40005
+      --dtype ${DTYPE}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+      --max-model-len ${MAX_MODEL_LEN}
+      --kv-transfer-config
+      '{"kv_connector":"MoRIIOConnector","kv_role":"kv_consumer","kv_connector_extra_config":{"backend":"xgmi","read_mode":true,"proxy_ip":"127.0.0.1","proxy_ping_port":"36367","http_port":"40005","handshake_port":"7301","notify_port":"7501"}}'
+    depends_on:
+      - router

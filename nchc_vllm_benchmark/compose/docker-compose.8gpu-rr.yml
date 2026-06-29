@@ -1,0 +1,224 @@
+services:
+  vllm-gpu0:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-llama31-gpu0
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      HF_HOME: ${HF_HOME}
+      HIP_VISIBLE_DEVICES: "0"
+    command: >
+      ${MODEL_NAME}
+      --host 0.0.0.0
+      --port 8000
+      --tensor-parallel-size 1
+      --dtype ${DTYPE}
+      --max-model-len ${MAX_MODEL_LEN}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+
+  vllm-gpu1:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-llama31-gpu1
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      HF_HOME: ${HF_HOME}
+      HIP_VISIBLE_DEVICES: "1"
+    command: >
+      ${MODEL_NAME}
+      --host 0.0.0.0
+      --port 8001
+      --tensor-parallel-size 1
+      --dtype ${DTYPE}
+      --max-model-len ${MAX_MODEL_LEN}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+
+  vllm-gpu2:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-llama31-gpu2
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      HF_HOME: ${HF_HOME}
+      HIP_VISIBLE_DEVICES: "2"
+    command: >
+      ${MODEL_NAME}
+      --host 0.0.0.0
+      --port 8002
+      --tensor-parallel-size 1
+      --dtype ${DTYPE}
+      --max-model-len ${MAX_MODEL_LEN}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+
+  vllm-gpu3:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-llama31-gpu3
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      HF_HOME: ${HF_HOME}
+      HIP_VISIBLE_DEVICES: "3"
+    command: >
+      ${MODEL_NAME}
+      --host 0.0.0.0
+      --port 8003
+      --tensor-parallel-size 1
+      --dtype ${DTYPE}
+      --max-model-len ${MAX_MODEL_LEN}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+
+  vllm-gpu4:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-llama31-gpu4
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      HF_HOME: ${HF_HOME}
+      HIP_VISIBLE_DEVICES: "4"
+    command: >
+      ${MODEL_NAME}
+      --host 0.0.0.0
+      --port 8004
+      --tensor-parallel-size 1
+      --dtype ${DTYPE}
+      --max-model-len ${MAX_MODEL_LEN}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+
+  vllm-gpu5:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-llama31-gpu5
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      HF_HOME: ${HF_HOME}
+      HIP_VISIBLE_DEVICES: "5"
+    command: >
+      ${MODEL_NAME}
+      --host 0.0.0.0
+      --port 8005
+      --tensor-parallel-size 1
+      --dtype ${DTYPE}
+      --max-model-len ${MAX_MODEL_LEN}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+
+  vllm-gpu6:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-llama31-gpu6
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      HF_HOME: ${HF_HOME}
+      HIP_VISIBLE_DEVICES: "6"
+    command: >
+      ${MODEL_NAME}
+      --host 0.0.0.0
+      --port 8006
+      --tensor-parallel-size 1
+      --dtype ${DTYPE}
+      --max-model-len ${MAX_MODEL_LEN}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+
+  vllm-gpu7:
+    image: ${VLLM_IMAGE}
+    container_name: vllm-llama31-gpu7
+    network_mode: host
+    ipc: host
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ${HOST_HF_CACHE}:${HF_HOME}
+    environment:
+      HF_HOME: ${HF_HOME}
+      HIP_VISIBLE_DEVICES: "7"
+    command: >
+      ${MODEL_NAME}
+      --host 0.0.0.0
+      --port 8007
+      --tensor-parallel-size 1
+      --dtype ${DTYPE}
+      --max-model-len ${MAX_MODEL_LEN}
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
